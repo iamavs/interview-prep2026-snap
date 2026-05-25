@@ -1,0 +1,45 @@
+name: Docker Build and Push and Deploy in K8s
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t anoopsuvarna/snap:v2 \
+                       -t anoopsuvarna/snap:${{ github.sha }} .
+
+      - name: Push Docker Images
+        run: |
+          docker push anoopsuvarna/snap:v2
+          docker push anoopsuvarna/snap:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:  
+      - name: Deploy to Kubernetes
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo kubectl set image deployment/devops-app \
+            devops-app=anoopsuvarna/v2:${{ github.sha }} -n prod
+
+            sudo kubectl rollout restart deployment/devops-app -n prod
