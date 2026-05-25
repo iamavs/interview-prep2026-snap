@@ -3,7 +3,7 @@ kind: Service
 
 metadata:
   name: devops-service
-  namespace: dev
+  namespace: prod
 
 spec:
   type: ClusterIP

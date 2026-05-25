@@ -3,13 +3,11 @@ kind: Ingress
 
 metadata:
   name: devops-ingress
-  namespace: dev
+  namespace: prod
 
 spec:
   rules:
-  - host: devops.local
-
-    http:
+  - http:
       paths:
       - path: /
         pathType: Prefix

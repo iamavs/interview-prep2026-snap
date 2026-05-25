@@ -9,7 +9,7 @@ const HOST = '0.0.0.0';
 // App
 const app = express();
 app.get('/', (req, res) => {
-  res.send('Hi there');
+  res.send('Hi there, this is deployment file which uses Ingress using Github actions :)');
 });
 
 app.get('/test', (req, res) => {
