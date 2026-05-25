@@ -40,6 +40,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             sudo kubectl set image deployment/devops-app \
-            devops-app=anoopsuvarna/v2:${{ github.sha }} -n prod
+            devops-app=anoopsuvarna/snap:${{ github.sha }} -n prod
 
             sudo kubectl rollout restart deployment/devops-app -n prod
